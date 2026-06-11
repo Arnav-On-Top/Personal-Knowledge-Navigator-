@@ -1,105 +1,102 @@
-Personal Knowledge Navigator
-Agentic Knowledge Retrieval System – Functional Prototype with Mock Data
+# Personal Knowledge Navigator
 
-An AI-powered knowledge navigator that enforces permissions, retrieves relevant information, and delivers cited, grounded answers. Currently runs with a mock knowledge base – extensible to real data sources.
+**Agentic Knowledge Retrieval System – Functional Prototype with Mock Data**
 
-https://img.shields.io/badge/python-3.9+-blue.svg
-https://img.shields.io/badge/License-MIT-yellow.svg
-https://img.shields.io/badge/Status-Functional%2520Prototype-yellowgreen.svg
+> An AI-powered knowledge navigator that enforces permissions, retrieves relevant information, and delivers cited, grounded answers. Currently runs with a mock knowledge base – extensible to real data sources.
 
-🚀 Quick Start (30 seconds)
-bash
-# 1. Clone repository
-git clone https://github.com/Arnav-On-Top/Personal-Knowledge-Navigator-
-cd Personal-Knowledge-Navigator-
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Status: Functional Prototype](https://img.shields.io/badge/Status-Functional%20Prototype-yellowgreen.svg)]()
 
-# 2. Install dependencies
-pip install -r requirements.txt
+---
 
-# 3. Run the API server
-python main.py
-Server starts at: http://localhost:8000
+## Quick Start
 
-✅ Open in browser: http://localhost:8000/docs – Interactive API documentation
+1. Clone the repository and enter the folder.  
+2. Create a virtual environment (recommended).  
+3. Install dependencies from `requirements.txt`.  
+4. Run the API server with `python main.py`.  
 
-📋 What Works Now
-✅ Core Features (Implemented)
-REST API – Full FastAPI server with Swagger UI
+The server starts at `http://localhost:8000`. Open `http://localhost:8000/docs` in your browser to see the interactive Swagger UI.
 
-Mock Knowledge Base – 5 sample documents on architecture, metrics, security, etc.
+---
 
-Permission Enforcement – RBAC (Admin, Editor, Analyst, Viewer) + ABAC policies
+## What Works Now
 
-Keyword Search – Simple text matching (easily upgradeable to semantic search)
+### Core Features (Implemented)
 
-Source Citations – Every answer includes document titles and confidence scores
+- **REST API** – Full FastAPI server with automatic documentation.  
+- **Mock Knowledge Base** – Five sample documents covering architecture, performance metrics, data consistency, deployment, and security.  
+- **Permission Enforcement** – Role‑based (Admin, Editor, Analyst, Viewer) plus attribute‑based policies.  
+- **Keyword Search** – Simple text matching (easily upgradeable to semantic search).  
+- **Source Citations** – Every answer includes document titles, relevance, and confidence scores.  
+- **Hallucination Risk Assessment** – Low / Medium / High based on confidence.  
+- **Multi‑turn Agent** – Knowledge agent with reasoning trace and conversation history.  
+- **Query History** – Automatic audit logging of all queries.
 
-Hallucination Risk Assessment – Low/Medium/High based on confidence
+### Ready for Extension
 
-Multi‑turn Agent – Knowledge agent with reasoning and conversation history
+- **Connector placeholders** – Add real databases, APIs, or vector stores via the `src/connectors/` directory.  
+- **Semantic search stubs** – Replace keyword matching with embeddings.  
+- **Test directory** – Structure is ready for unit tests.
 
-Query History – Audit logging of all queries
+---
 
-🔜 Ready for Extension
-Connector placeholders – Add real databases, APIs, vector stores via src/connectors/
+## API Endpoints
 
-Semantic search stubs – Replace keyword search with embeddings
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Health check – returns status and connected sources. |
+| GET | `/sources` | Lists all connected data sources. |
+| GET | `/history` | Returns query history for auditing. |
+| POST | `/query` | Ask a natural language question; returns grounded answer with citations. |
+| POST | `/agent/chat` | Multi‑turn conversation with the knowledge agent. |
+| GET | `/permissions/check` | Check if a user has access to a resource. |
 
-Test directory – Structure ready for unit tests
+### Example Request to `/query`
 
-📡 API Endpoints
-Health Check
-bash
-curl http://localhost:8000/health
-Query Knowledge Base
-bash
-curl -X POST "http://localhost:8000/query" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "question": "What are the latest architecture decisions?",
-    "user": {
-      "user_id": "user@example.com",
-      "roles": ["analyst"],
-      "organization": "engineering"
-    },
-    "top_k": 3
-  }'
-Agent Chat (multi‑turn)
-bash
-curl -X POST "http://localhost:8000/agent/chat" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "question": "What metrics should we track for API performance?",
-    "user": {
-      "user_id": "user@example.com",
-      "roles": ["analyst"],
-      "organization": "engineering"
+Send a JSON payload:
+
+{
+  "question": "What are the latest architecture decisions?",
+  "user": {
+    "user_id": "user@example.com",
+    "roles": ["analyst"],
+    "organization": "engineering"
+  },
+  "top_k": 3
+}
+
+### Example Response
+
+{
+  "answer": "Based on the retrieved documents...",
+  "citations": [
+    {
+      "document_title": "System Architecture Principles",
+      "confidence_score": 0.92,
+      "source_id": "mock_source"
     }
-  }'
-View Connected Sources
-bash
-curl http://localhost:8000/sources
-Check Permissions
-bash
-curl "http://localhost:8000/permissions/check?user_id=user@example.com&role=analyst&resource=document"
-Query History
-bash
-curl http://localhost:8000/history
-🧪 Run an Example
-bash
+  ],
+  "confidence_score": 0.88,
+  "hallucination_risk": "low",
+  "sources_used": ["mock_source"]
+}
+
+---
+
+## Running an Example Script
+
+From the project root, execute:
+
 python -m examples.basic_query
-This will:
 
-Initialize the navigator
+This will initialize the navigator, create a user context, run several queries, and display citations and confidence scores.
 
-Create a user context
+---
 
-Run several example queries
+## Project Structure
 
-Show citations and confidence scores
-
-📁 Project Structure
-text
 Personal-Knowledge-Navigator-/
 ├── main.py                 # FastAPI server
 ├── requirements.txt        # Dependencies
@@ -118,57 +115,66 @@ Personal-Knowledge-Navigator-/
     ├── connectors/         # Stubs for future real connectors
     ├── retrieval/          # Stubs for semantic search
     └── citation/           # Stubs for advanced grounding
-🔧 Configuration
-Copy .env.example to .env and adjust values (optional – defaults work with mock data):
 
-env
+---
+
+## Configuration
+
+Copy `.env.example` to `.env` and adjust values (optional – defaults work with mock data):
+
 API_HOST=0.0.0.0
 API_PORT=8000
 DEBUG=false
 LOG_LEVEL=INFO
-🔌 Adding Real Data Sources (Roadmap)
-The system is designed to be extended:
 
-Database Connector – Implement src/connectors/database.py
+---
 
-API Connector – Implement src/connectors/api.py
+## Adding Real Data Sources (Roadmap)
 
-Vector Store – Implement src/retrieval/search.py with embeddings
+The system is designed to be extended. To add a new data source:
 
-Knowledge Graph – Implement src/connectors/knowledge_graph.py
+1. Implement a connector class in `src/connectors/` (e.g., `database.py`).  
+2. Inherit from `BaseConnector` (see placeholder files).  
+3. Register the connector with the navigator using `add_source()`.  
 
-See inline comments in placeholder files for guidance.
+Refer to inline comments in the placeholder files for guidance.
 
-🧪 Testing (Planned)
-Test files are stubbed in tests/. When ready:
+---
 
-bash
+## Testing (Planned)
+
+Test stubs are located in the `tests/` directory. When ready, run:
+
 pytest
 pytest --cov=src
-🌟 Key Design Principles
-Multi‑source ready – Plugin architecture for connectors
 
-Permission enforcement – RBAC + ABAC, organization isolation
+---
 
-Grounded answers – Citations with confidence scores
+## Key Design Principles
 
-Hallucination reduction – Risk assessment per answer
+- **Multi‑source ready** – Plugin architecture for connectors.  
+- **Permission enforcement** – RBAC + ABAC with organization isolation.  
+- **Grounded answers** – Citations with confidence scores.  
+- **Hallucination reduction** – Risk assessment per answer.  
+- **Async/await** – Non‑blocking I/O for scalability.
 
-Async/await – Non‑blocking I/O for scalability
+---
 
-🤝 Contributing
-Contributions welcome! Especially:
+## Contributing
 
-Real connectors (PostgreSQL, REST APIs, Chroma)
+Contributions are welcome, especially for:
 
-Semantic search implementation
+- Real connectors (PostgreSQL, REST APIs, Chroma, Neo4j).  
+- Semantic search implementation (embeddings + vector store).  
+- Unit tests.  
+- Additional examples.
 
-Unit tests
+---
 
-Additional examples
+## License
 
-📄 License
 MIT License – see repository for details.
 
-Built with ❤️ – a functional foundation ready for enterprise AI retrieval.
+---
 
+**Built with ❤️ – a functional foundation ready for enterprise AI retrieval.**
