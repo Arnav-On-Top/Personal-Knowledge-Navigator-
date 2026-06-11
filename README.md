@@ -12,10 +12,10 @@
 
 ## Quick Start
 
-1. Clone the repository and enter the folder.  
-2. Create a virtual environment (recommended).  
-3. Install dependencies from `requirements.txt`.  
-4. Run the API server with `python main.py`.  
+1. **Clone the repository** and enter the folder.  
+2. **Create a virtual environment** (recommended).  
+3. **Install dependencies** from `requirements.txt`.  
+4. **Run the API server** with `python main.py`.  
 
 The server starts at `http://localhost:8000`. Open `http://localhost:8000/docs` in your browser to see the interactive Swagger UI.
 
@@ -57,6 +57,7 @@ The server starts at `http://localhost:8000`. Open `http://localhost:8000/docs` 
 
 Send a JSON payload:
 
+```json
 {
   "question": "What are the latest architecture decisions?",
   "user": {
@@ -66,115 +67,3 @@ Send a JSON payload:
   },
   "top_k": 3
 }
-
-### Example Response
-
-{
-  "answer": "Based on the retrieved documents...",
-  "citations": [
-    {
-      "document_title": "System Architecture Principles",
-      "confidence_score": 0.92,
-      "source_id": "mock_source"
-    }
-  ],
-  "confidence_score": 0.88,
-  "hallucination_risk": "low",
-  "sources_used": ["mock_source"]
-}
-
----
-
-## Running an Example Script
-
-From the project root, execute:
-
-python -m examples.basic_query
-
-This will initialize the navigator, create a user context, run several queries, and display citations and confidence scores.
-
----
-
-## Project Structure
-
-Personal-Knowledge-Navigator-/
-├── main.py                 # FastAPI server
-├── requirements.txt        # Dependencies
-├── .env.example            # Environment variables template
-├── examples/
-│   └── basic_query.py      # Example usage script
-└── src/
-    ├── __init__.py
-    ├── config.py           # Environment configuration
-    ├── models.py           # Data models (UserContext, Citation, etc.)
-    ├── mock_data.py        # Sample documents and keyword search
-    ├── navigator.py        # Main orchestrator
-    ├── agents/             # Knowledge agent for conversation
-    ├── permissions/        # RBAC and ABAC enforcer
-    ├── utils/              # Logging helpers
-    ├── connectors/         # Stubs for future real connectors
-    ├── retrieval/          # Stubs for semantic search
-    └── citation/           # Stubs for advanced grounding
-
----
-
-## Configuration
-
-Copy `.env.example` to `.env` and adjust values (optional – defaults work with mock data):
-
-API_HOST=0.0.0.0
-API_PORT=8000
-DEBUG=false
-LOG_LEVEL=INFO
-
----
-
-## Adding Real Data Sources (Roadmap)
-
-The system is designed to be extended. To add a new data source:
-
-1. Implement a connector class in `src/connectors/` (e.g., `database.py`).  
-2. Inherit from `BaseConnector` (see placeholder files).  
-3. Register the connector with the navigator using `add_source()`.  
-
-Refer to inline comments in the placeholder files for guidance.
-
----
-
-## Testing (Planned)
-
-Test stubs are located in the `tests/` directory. When ready, run:
-
-pytest
-pytest --cov=src
-
----
-
-## Key Design Principles
-
-- **Multi‑source ready** – Plugin architecture for connectors.  
-- **Permission enforcement** – RBAC + ABAC with organization isolation.  
-- **Grounded answers** – Citations with confidence scores.  
-- **Hallucination reduction** – Risk assessment per answer.  
-- **Async/await** – Non‑blocking I/O for scalability.
-
----
-
-## Contributing
-
-Contributions are welcome, especially for:
-
-- Real connectors (PostgreSQL, REST APIs, Chroma, Neo4j).  
-- Semantic search implementation (embeddings + vector store).  
-- Unit tests.  
-- Additional examples.
-
----
-
-## License
-
-MIT License – see repository for details.
-
----
-
-**Built with ❤️ – a functional foundation ready for enterprise AI retrieval.**
