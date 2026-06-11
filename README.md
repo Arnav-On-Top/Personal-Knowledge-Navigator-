@@ -1,64 +1,105 @@
 # Personal Knowledge Navigator
 
-**Agentic Knowledge Retrieval System – Functional Prototype with Mock Data**
+Agentic Knowledge Retrieval System (Functional Prototype)
 
-> An AI-powered knowledge navigator that enforces permissions, retrieves relevant information, and delivers cited, grounded answers. Currently runs with a mock knowledge base – extensible to real data sources.
-
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Status: Functional Prototype](https://img.shields.io/badge/Status-Functional%20Prototype-yellowgreen.svg)]()
+A knowledge retrieval system that enforces permissions, searches a knowledge base, and returns grounded answers with citations. The current implementation uses a mock knowledge base and keyword-based retrieval.
 
 ---
 
-## Quick Start
+## Features
 
-1. **Clone the repository** and enter the folder.  
-2. **Create a virtual environment** (recommended).  
-3. **Install dependencies** from `requirements.txt`.  
-4. **Run the API server** with `python main.py`.  
+### Implemented
 
-The server starts at `http://localhost:8000`. Open `http://localhost:8000/docs` in your browser to see the interactive Swagger UI.
+* FastAPI REST API
+* Mock knowledge base with sample documents
+* Role-Based Access Control (RBAC)
+* Attribute-Based Access Control (ABAC)
+* Keyword search retrieval
+* Source citations and confidence scoring
+* Hallucination risk assessment
+* Multi-turn conversational agent
+* Query history and audit logging
+
+### Current Limitations
+
+* Uses mock data only
+* No external database connectors
+* No vector database integration
+* No semantic embedding search
+* Limited sample dataset
 
 ---
 
-## What Works Now
+## Requirements
 
-### Core Features (Implemented)
+* Python 3.9+
+* pip
 
-- **REST API** – Full FastAPI server with automatic documentation.  
-- **Mock Knowledge Base** – Five sample documents covering architecture, performance metrics, data consistency, deployment, and security.  
-- **Permission Enforcement** – Role‑based (Admin, Editor, Analyst, Viewer) plus attribute‑based policies.  
-- **Keyword Search** – Simple text matching (easily upgradeable to semantic search).  
-- **Source Citations** – Every answer includes document titles, relevance, and confidence scores.  
-- **Hallucination Risk Assessment** – Low / Medium / High based on confidence.  
-- **Multi‑turn Agent** – Knowledge agent with reasoning trace and conversation history.  
-- **Query History** – Automatic audit logging of all queries.
+---
 
-### Ready for Extension
+## Installation
 
-- **Connector placeholders** – Add real databases, APIs, or vector stores via the `src/connectors/` directory.  
-- **Semantic search stubs** – Replace keyword matching with embeddings.  
-- **Test directory** – Structure is ready for unit tests.
+1. Clone the repository
+
+```bash
+git clone https://github.com/Arnav-On-Top/Personal-Knowledge-Navigator-
+cd Personal-Knowledge-Navigator-
+```
+
+2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Start the server
+
+```bash
+python main.py
+```
+
+Server URL:
+
+```text
+http://localhost:8000
+```
+
+API Documentation:
+
+```text
+http://localhost:8000/docs
+```
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/health` | Health check – returns status and connected sources. |
-| GET | `/sources` | Lists all connected data sources. |
-| GET | `/history` | Returns query history for auditing. |
-| POST | `/query` | Ask a natural language question; returns grounded answer with citations. |
-| POST | `/agent/chat` | Multi‑turn conversation with the knowledge agent. |
-| GET | `/permissions/check` | Check if a user has access to a resource. |
+### Health Check
 
-### Example Request to `/query`
+```bash
+GET /health
+```
 
-Send a JSON payload:
+Example:
 
-```json
-{
+```bash
+curl http://localhost:8000/health
+```
+
+---
+
+### Query Knowledge Base
+
+```bash
+POST /query
+```
+
+Example:
+
+```bash
+curl -X POST "http://localhost:8000/query" \
+-H "Content-Type: application/json" \
+-d '{
   "question": "What are the latest architecture decisions?",
   "user": {
     "user_id": "user@example.com",
@@ -66,4 +107,162 @@ Send a JSON payload:
     "organization": "engineering"
   },
   "top_k": 3
-}
+}'
+```
+
+---
+
+### Agent Chat
+
+```bash
+POST /agent/chat
+```
+
+Example:
+
+```bash
+curl -X POST "http://localhost:8000/agent/chat" \
+-H "Content-Type: application/json" \
+-d '{
+  "question": "What metrics should we track for API performance?",
+  "user": {
+    "user_id": "user@example.com",
+    "roles": ["analyst"],
+    "organization": "engineering"
+  }
+}'
+```
+
+---
+
+### List Sources
+
+```bash
+GET /sources
+```
+
+Example:
+
+```bash
+curl http://localhost:8000/sources
+```
+
+---
+
+### Permission Check
+
+```bash
+GET /permissions/check
+```
+
+Example:
+
+```bash
+curl "http://localhost:8000/permissions/check?user_id=user@example.com&role=analyst&resource=document"
+```
+
+---
+
+### Query History
+
+```bash
+GET /history
+```
+
+Example:
+
+```bash
+curl http://localhost:8000/history
+```
+
+---
+
+## Example Usage
+
+Run the included example:
+
+```bash
+python -m examples.basic_query
+```
+
+The example demonstrates:
+
+* Creating a user context
+* Running queries
+* Viewing citations
+* Viewing confidence scores
+
+---
+
+## Project Structure
+
+```text
+Personal-Knowledge-Navigator-/
+│
+├── main.py
+├── requirements.txt
+├── .env.example
+│
+├── examples/
+│   └── basic_query.py
+│
+└── src/
+    ├── config.py
+    ├── models.py
+    ├── mock_data.py
+    ├── navigator.py
+    │
+    ├── agents/
+    ├── permissions/
+    ├── connectors/
+    ├── retrieval/
+    ├── citation/
+    └── utils/
+```
+
+---
+
+## Configuration
+
+Create a `.env` file (optional).
+
+```env
+API_HOST=0.0.0.0
+API_PORT=8000
+DEBUG=false
+LOG_LEVEL=INFO
+```
+
+Default values work without additional configuration.
+
+---
+
+## Architecture
+
+```text
+User Request
+      │
+      ▼
+ Permission Check
+      │
+      ▼
+ Keyword Retrieval
+      │
+      ▼
+ Knowledge Agent
+      │
+      ▼
+ Citation Generation
+      │
+      ▼
+ Response + Confidence Score
+```
+
+---
+
+## License
+
+MIT License
+
+```
+```
